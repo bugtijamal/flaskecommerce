@@ -1,0 +1,110 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="{{url_for('admin')}}">Navbar</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul class="navbar-nav">
+            <li class="nav-item active">
+              <a class="nav-link" href="{{url_for('admin')}}">product <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{url_for('brands')}}">brand</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{url_for('categories')}}">catgory</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Add products
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" href="{{url_for('addproduct')}}">Add product</a>
+                <a class="dropdown-item" href="{{url_for('addbrand')}}">add brand</a>
+                <a class="dropdown-item" href="{{url_for('addcat')}}">add category</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
+</div>
+
+<!--==========END NAVBAR ==============-->
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-1"></div>
+            <div class="col-md-10">
+                <div class="text-center bg-info p-2 h4">Add a product</div>
+                {% from "_formhelpers.html" import render_field %}
+                <form method="post" enctype="multipart/form-data">
+                <div>
+                    {{ render_field(form.name, class="form-control") }}
+                    {{ render_field(form.price, class="form-control") }}
+                    {{ render_field(form.discount, class="form-control") }}
+                    {{ render_field(form.stock, class="form-control") }}
+                    <label for="brand">Add a brand</label>
+                    <select name="brand" id="brand" class="form-control" required>
+                        {% if getproduct %}
+                        <option value="{{getproduct.brand_id}}" style="display: none;">{{getproduct.brand.name}}</option>
+                        {% for brand in brands %}
+                        <option value="{{brand.id}}">{{brand.name}}</option>
+                        {% endfor %}
+                       {% else %}
+                     <option value=""> Select A brand</option>
+                     {% for brand in brands %}
+                     <option value="{{brand.id}}">{{brand.name}}</option>
+                     {% endfor %}
+                     {% endif %}
+                    </select>
+
+                    <label for="category">Add a category</label>
+                    <select name="category" id="category" class="form-control" required>
+                    {% if getproduct %}
+                      <option value="{{getproduct.category_id}}" style="display: none;">{{getproduct.category.name}}</option>
+                      {% for category in categories %}
+                      <option value="{{category.id}}">{{category.name}}</option>
+                      {% endfor %}
+                     {% else %}
+                     <option value=""> Select A category</option>
+                     {% for category in categories %}
+                     <option value="{{category.id}}">{{category.name}}</option>
+                     {% endfor %}
+                     {% endif %}
+                    </select>
+
+                    {{ render_field(form.colors, class="form-control") }}
+                    {{ render_field(form.discription, class="form-control", rows="10") }}
+                </div>
+                <div class="container">
+                    <div class="row">
+                        {% if getproduct %}
+                        <div class="col-md-4"> <input type="file" name="image_1" id="image_1">
+                            <a href="{{url_for('static',filename='images/' + getproduct.image_1)}}"> images/{{ getproduct.image_1}}</a>
+                        </div>
+                        <div class="col-md-4"><input type="file" name="image_2" id="image_2"> 
+                            <a href="{{url_for('static',filename='images/' + getproduct.image_2)}}">images/{{ getproduct.image_2}}</a>
+                        </div>
+                        
+                        <div class="col-md-4"><input type="file" name="image_3" id="image_3"> 
+                            <a href="{{url_for('static',filename='images/' + getproduct.image_3)}}"> image/{{ getproduct.image_3}}</a>
+                        </div>
+                      
+                        {% else %}
+                        <div class="col-md-4">{{ render_field(form.image_1) }}</div>
+                        <div class="col-md-4">{{ render_field(form.image_2) }}</div>
+                        <div class="col-md-4">{{ render_field(form.image_3) }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <p><input type="submit" value="{% if getproduct %}Update {% else %}Add{% endif %} product" class="btn-outline-info">
+                </form>
+            </div>
+      <div class="col-md-1"></div>
+    </div>
+</div>
+{% endblock content %}
