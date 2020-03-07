@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
 import os
+from flask_msearch import Search
 
 
 
@@ -18,6 +19,10 @@ patch_request_class(app)  # set maximum file size, default is 16MB
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
+search = Search()
+search.init_app(app)
+
+
 
 from shop.products import routes
 from shop.admin import routes

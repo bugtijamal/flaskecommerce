@@ -3,6 +3,7 @@ from datetime import datetime
 
 
 class Addproduct(db.Model):
+    __seachbale__ = ['name','desc']
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
     price = db.Column(db.Numeric(10,2), nullable=False)
