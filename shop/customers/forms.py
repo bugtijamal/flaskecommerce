@@ -8,6 +8,7 @@ class CustomerRegisterForm(Form):
     email = StringField('Email: ', [validators.Email(), validators.DataRequired()])
     password = PasswordField('Password: ', [validators.DataRequired(), validators.EqualTo('confirm', message=' Both password must match! ')])
     confirm = PasswordField('Repeat Password: ', [validators.DataRequired()])
+
     country = StringField('Country: ', [validators.DataRequired()])
     state = StringField('State: ', [validators.DataRequired()])
     city = StringField('City: ', [validators.DataRequired()])
