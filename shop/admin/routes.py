@@ -22,8 +22,8 @@ def categories():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    form = RegistrationForm(request.form)
-    if request.method == 'POST' and form.validate():
+    form = RegistrationForm()
+    if form.validate_on_submit():
         hash_password = bcrypt.generate_password_hash(form.password.data)
         user = User(name=form.name.data,username=form.username.data, email=form.email.data,
                     password=hash_password)
@@ -36,8 +36,8 @@ def register():
 
 @app.route('/login', methods=['GET','POST'])
 def login():
-    form = LoginForm(request.form)
-    if request.method == 'POST' and form.validate():
+    form = LoginForm()
+    if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             session['email'] = form.email.data
