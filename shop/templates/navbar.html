@@ -29,9 +29,23 @@
                     {% for category in categories %}
                   <a class="dropdown-item" href="{{url_for('get_category',id=category.id)}}">{{category.name}}</a>
                   {% endfor %}
-                 
                 </div>
               </li>
+             {% if current_user.is_authenticated %}
+             <li class="nav-item">
+              <a href="{{url_for('customer_logout')}}" class="nav-link">{{current_user.name}}</a>
+            </li>
+             <li class="nav-item">
+               <a href="{{url_for('customer_logout')}}" class="nav-link"> Logout</a>
+             </li>
+             {% else %}
+             <li class="nav-item">
+              <a href="{{url_for('customer_register')}}" class="nav-link">Sign in</a>
+            </li>
+             <li class="nav-item">
+              <a href="{{url_for('customerLogin')}}" class="nav-link">login</a>
+            </li>
+            {% endif %}
               <li class="nav-item">
                 <a href="{{url_for('getCart')}}" class="nav-link"> Cart ({{ session['Shoppingcart']|length }}) </a>
               </li>

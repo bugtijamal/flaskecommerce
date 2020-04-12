@@ -7,8 +7,6 @@ from flask_msearch import Search
 from flask_login import LoginManager 
 
 
-
-
 basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'

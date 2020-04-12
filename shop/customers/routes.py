@@ -19,6 +19,7 @@ def customer_register():
         return redirect(url_for('login'))
     return render_template('customer/register.html', form=form)
 
+
 @app.route('/customer/login', methods=['GET','POST'])
 def customerLogin():
     form = CustomerLoginFrom()
@@ -33,3 +34,10 @@ def customerLogin():
         return redirect(url_for('customerLogin'))
             
     return render_template('customer/login.html', form=form)
+
+
+@app.route('/customer/logout')
+def customer_logout():
+    logout_user()
+    return redirect(url_for('home'))
+
