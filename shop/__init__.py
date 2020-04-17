@@ -5,7 +5,7 @@ from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_cl
 import os
 from flask_msearch import Search
 from flask_login import LoginManager 
-
+from flask_migrate import Migrate
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)
@@ -22,6 +22,14 @@ db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 search = Search()
 search.init_app(app)
+
+migrate = Migrate(app, db)
+with app.app_context():
+    if db.engine.url.drivername == "sqlite":
+        migrate.init_app(app, db, render_as_batch=True)
+    else:
+        migrate.init_app(app, db)
+
 
 login_manager = LoginManager()
 login_manager.init_app(app)
