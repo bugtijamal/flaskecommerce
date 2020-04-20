@@ -25,4 +25,4 @@ class Register(db.Model, UserMixin):
         return '<Register %r>' % self.name
 
 
-db.create_all()
+
