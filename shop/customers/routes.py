@@ -5,6 +5,7 @@ from .forms import CustomerRegisterForm, CustomerLoginFrom
 from .model import Register
 import secrets
 import os
+import json
 
 
 @app.route('/customer/register', methods=['GET','POST'])
