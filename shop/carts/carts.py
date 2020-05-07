@@ -39,6 +39,8 @@ def AddCart():
     finally:
         return redirect(request.referrer)
 
+
+
 @app.route('/carts')
 def getCart():
     if 'Shoppingcart' not in session or len(session['Shoppingcart']) <= 0:
@@ -52,6 +54,8 @@ def getCart():
         tax =("%.2f" %(.06 * float(subtotal)))
         grandtotal = float("%.2f" % (1.06 * subtotal))
     return render_template('products/carts.html',tax=tax, grandtotal=grandtotal,brands=brands(),categories=categories())
+
+
 
 @app.route('/updatecart/<int:code>', methods=['POST'])
 def updatecart(code):
@@ -87,6 +91,7 @@ def deleteitem(id):
     except Exception as e:
         print(e)
         return redirect(url_for('getCart'))
+
 
 @app.route('/clearcart')
 def clearcart():

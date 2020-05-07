@@ -28,13 +28,12 @@ class Register(db.Model, UserMixin):
 
 class JsonEcodedDict(db.TypeDecorator):
     impl = db.Text
-
-    def set_value(self, value, dialect):
+    def process_bind_param(self, value, dialect):
         if value is None:
             return '{}'
         else:
             return json.dumps(value)
-    def get_value(self, value, dialect):
+    def process_result_value(self, value, dialect):
         if value is None:
             return {}
         else:
