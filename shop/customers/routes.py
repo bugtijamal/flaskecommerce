@@ -7,6 +7,33 @@ import secrets
 import os
 import json
 import pdfkit
+import stripe
+
+buplishable_key ='pk_test_MaILxTYQ15v5Uhd6NKI9wPdD00qdL0QZSl'
+stripe.api_key ='sk_test_9JlhVB6qwjcRdYzizjdwgIo0Dt00N55uxbWy'
+
+@app.route('/payment',methods=['POST'])
+def payment():
+    invoice = request.get('invoice')
+    amount = request.form.get('amount')
+    customer = stripe.Customer.create(
+      email=request.form['stripeEmail'],
+      source=request.form['stripeToken'],
+    )
+    charge = stripe.Charge.create(
+      customer=customer.id,
+      description='Myshop',
+      amount=amount,
+      currency='usd',
+    )
+    orders =  CustomerOrder.query.filter_by(customer_id = current_user.id,invoice=invoice).order_by(CustomerOrder.id.desc()).first()
+    orders.status = 'Paid'
+    db.session.commit()
+    return redirect(url_for('thanks'))
+
+@app.route('/thanks')
+def thanks():
+    return render_template('customer/thank.html')
 
 
 @app.route('/customer/register', methods=['GET','POST'])
@@ -43,12 +70,20 @@ def customer_logout():
     logout_user()
     return redirect(url_for('home'))
 
+def updateshoppingcart():
+    for key, shopping in session['Shoppingcart'].items():
+        session.modified = True
+        del shopping['image']
+        del shopping['colors']
+    return updateshoppingcart
+
 @app.route('/getorder')
 @login_required
 def get_order():
     if current_user.is_authenticated:
         customer_id = current_user.id
         invoice = secrets.token_hex(5)
+        updateshoppingcart
         try:
             order = CustomerOrder(invoice=invoice,customer_id=customer_id,orders=session['Shoppingcart'])
             db.session.add(order)
@@ -61,6 +96,7 @@ def get_order():
             flash('Some thing went wrong while get order', 'danger')
             return redirect(url_for('getCart'))
         
+
 
 @app.route('/orders/<invoice>')
 @login_required
@@ -76,7 +112,7 @@ def orders(invoice):
             subTotal += float(product['price']) * int(product['quantity'])
             subTotal -= discount
             tax = ("%.2f" % (.06 * float(subTotal)))
-            grandTotal = float("%.2f" % (1.06 * subTotal))
+            grandTotal = ("%.2f" % (1.06 * float(subTotal)))
 
     else:
         return redirect(url_for('customerLogin'))
